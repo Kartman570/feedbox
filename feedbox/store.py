@@ -26,3 +26,20 @@ class Inbox:
 
     def close(self):
         self.db.close()
+
+    def entries(self, unread=False, source=None, limit=50):
+        clauses, params = [], []
+        if unread:
+            clauses.append("seen=0")
+        if source:
+            clauses.append("source=?")
+            params.append(source)
+        where = " WHERE " + " AND ".join(clauses) if clauses else ""
+        params.append(limit)
+        return [dict(row) for row in self.db.execute(
+            "SELECT * FROM entries" + where + " ORDER BY id DESC LIMIT ?", params)]
+
+    def mark(self, entry_id, seen=True):
+        with self.db:
+            return self.db.execute("UPDATE entries SET seen=? WHERE id=?",
+                                   (int(seen), entry_id)).rowcount == 1
