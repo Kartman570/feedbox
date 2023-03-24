@@ -43,3 +43,17 @@ class Inbox:
         with self.db:
             return self.db.execute("UPDATE entries SET seen=? WHERE id=?",
                                    (int(seen), entry_id)).rowcount == 1
+
+    def subscribe(self, url):
+        with self.db:
+            self.db.execute("CREATE TABLE IF NOT EXISTS feeds (url TEXT PRIMARY KEY)")
+            self.db.execute("INSERT OR IGNORE INTO feeds(url) VALUES(?)", (url,))
+
+    def feeds(self):
+        self.db.execute("CREATE TABLE IF NOT EXISTS feeds (url TEXT PRIMARY KEY)")
+        return [row[0] for row in self.db.execute("SELECT url FROM feeds ORDER BY url")]
+
+    def unsubscribe(self, url):
+        with self.db:
+            self.feeds()
+            return self.db.execute("DELETE FROM feeds WHERE url=?", (url,)).rowcount
