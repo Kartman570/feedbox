@@ -1,0 +1,4 @@
+<rss version="2.0"><channel><title>Workshop</title>
+<item><guid>tools</guid><title>New workshop tools</title><link>https://example.com/tools</link><description>A compact tool kit.</description></item>
+<item><guid>maps</guid><title>Community maps</title><link>https://example.com/maps</link></item>
+</channel></rss>
