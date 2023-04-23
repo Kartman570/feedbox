@@ -5,7 +5,7 @@ from pathlib import Path
 from urllib.error import URLError
 from xml.etree.ElementTree import ParseError
 
-from .fetch import fetch
+from .fetch import MAX_BYTES, fetch
 from .parser import read_feed
 from .store import Inbox
 
@@ -32,7 +32,11 @@ def main():
     inbox = Inbox(args.db)
     try:
         if args.command == "import":
-            print(inbox.ingest(args.source, read_feed(args.file.read_bytes())))
+            with args.file.open("rb") as stream:
+                data = stream.read(MAX_BYTES + 1)
+            if len(data) > MAX_BYTES:
+                raise ValueError("Feed is larger than 2 MiB")
+            print(inbox.ingest(args.source, read_feed(data)))
         elif args.command == "list":
             if args.limit < 1:
                 raise ValueError("Limit must be positive")

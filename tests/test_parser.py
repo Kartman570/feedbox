@@ -20,3 +20,6 @@ class ParserTests(unittest.TestCase):
     def test_declarations(self):
         with self.assertRaises(ValueError):
             read_feed(b'<!DOCTYPE rss><rss/>')
+
+    def test_empty_rss(self):
+        self.assertEqual(read_feed(b'<rss><channel/></rss>'), [])
