@@ -9,7 +9,8 @@ class ParserTests(unittest.TestCase):
                          "https://example.com/one")
 
     def test_atom(self):
-        data = b'<feed xmlns="http://www.w3.org/2005/Atom"><entry><id>a</id><title>A</title><link href="/a"/></entry></feed>'
+        data = (b'<feed xmlns="http://www.w3.org/2005/Atom"><entry><id>a</id>'
+                b'<title>A</title><link href="/a"/></entry></feed>')
         self.assertEqual(read_feed(data, "https://example.com")[0]['key'], "a")
 
     def test_unknown_format(self):
